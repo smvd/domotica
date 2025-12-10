@@ -1,6 +1,6 @@
 default: log
 
-run:
+env:
 	docker run --privileged -v ~/edu/domotica:/project/zephyr/project -it smvd-zephyr
 
 build:
