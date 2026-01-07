@@ -5,8 +5,6 @@ static const struct gpio_dt_spec GPIO_LED = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpi
 static const struct gpio_dt_spec GPIO_BUTTON = GPIO_DT_SPEC_GET(DT_ALIAS(sw0), gpios);
 static struct gpio_callback GPIO_buttonCallbackData;
 
-
-
 uint8_t GPIO_Init() {
 	if (!gpio_is_ready_dt(&GPIO_LED)) {
         LOG_ERR("led device not ready");

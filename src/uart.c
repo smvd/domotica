@@ -70,9 +70,11 @@ void UART_InteruptHandler(const struct device * dev, void * user_data) {
                 UART_commandBuffer[UART_commandBufferIndex] = '\0';
                 UART_DisableInput();
             } else if (c == '\b' || c == 0x7F) {
-                char * temp = "\b \b";
-                UART_Write(temp, 3);
-                UART_commandBufferIndex -= 1;
+                if (UART_commandBufferIndex != 0) {
+                    char * temp = "\b \b";
+                    UART_Write(temp, 3);
+                    UART_commandBufferIndex -= 1;
+                }
             } else {
                 UART_Write(&c, 1);
                 UART_commandBuffer[UART_commandBufferIndex++] = c;
@@ -97,6 +99,7 @@ void UART_InteruptHandler(const struct device * dev, void * user_data) {
 
 void UART_EnableInput() {
     UART_commandReady = 0;
+    UART_commandBufferIndex = 0;
     uart_irq_rx_enable(UART_DEVICE);
 }
 

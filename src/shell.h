@@ -12,5 +12,6 @@
 uint8_t SHELL_Init();
 void SHELL_HandleCommand();
 void SHELL_WritePrompt();
+void SHELL_ToUpper(char * string, size_t length);
 
 #endif
