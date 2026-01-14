@@ -1,6 +1,13 @@
 #include "gpio.h"
 
 LOG_MODULE_REGISTER(GPIO, LOG_LEVEL_INF);
+
+const struct gpio_dt_spec GPIO_STATUS_LEDS[GPIO_STATUS_LED_COUNT] = {
+    GPIO_DT_SPEC_GET(DT_ALIAS(led1), gpios),
+    GPIO_DT_SPEC_GET(DT_ALIAS(led2), gpios),
+    GPIO_DT_SPEC_GET(DT_ALIAS(led3), gpios),
+};
+
 const struct gpio_dt_spec GPIO_LED = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
 const struct gpio_dt_spec GPIO_BUTTON = GPIO_DT_SPEC_GET(DT_ALIAS(sw0), gpios);
 struct gpio_callback GPIO_buttonCallbackData;
@@ -13,9 +20,21 @@ otCoapResource GPIO_rsc = {
 };
 
 uint8_t GPIO_Init() {
+    for (uint8_t i = 0; i < GPIO_STATUS_LED_COUNT; i += 1) {
+        if (!(gpio_is_ready_dt(&GPIO_STATUS_LEDS[i]))) {
+            LOG_ERR("status led device %d not ready", i);
+    		return 1;
+        }
+
+        if (gpio_pin_configure_dt(&GPIO_STATUS_LEDS[i], GPIO_OUTPUT_HIGH) < 0) {
+            LOG_ERR("status led configuration for %d failed", i);
+        	return 1;
+        }
+    }
+
 	if (!gpio_is_ready_dt(&GPIO_LED)) {
         LOG_ERR("led device not ready");
-		return 1;
+        return 1;
 	}
 	
 	if (gpio_pin_configure_dt(&GPIO_LED, GPIO_OUTPUT_HIGH) < 0) {
@@ -23,7 +42,6 @@ uint8_t GPIO_Init() {
 		return 1;
 	}
 	
-
 	if (!gpio_is_ready_dt(&GPIO_BUTTON)) {
         LOG_ERR("button device not ready");
         return 1;
@@ -46,7 +64,19 @@ uint8_t GPIO_Init() {
 
 	LOG_INF("GPIO ready");
 
+	GPIO_SetStatus(STATE_UNKNOWN);
+
     return 0;
+}
+
+void GPIO_SetStatus(enum _GPIO_STATE state) {
+    switch (state) {
+        case STATE_UNKNOWN:
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 1);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
+            break;
+    }
 }
 
 void GPIO_ButtonCallback(const struct device * dev, struct gpio_callback * cb, uint32_t pins) {

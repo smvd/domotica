@@ -73,7 +73,6 @@ uint8_t COAP_SendRequest(const char * addr, const char * uri, otCoapCode code, u
 		return 1;
 	}
 
-	otMessageFree(message);
     return 0;
 }
 
