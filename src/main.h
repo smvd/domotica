@@ -9,3 +9,7 @@
 #include "gpio.h"
 
 #endif
+
+
+// List all nodes
+// Turn any send light on/off to each node

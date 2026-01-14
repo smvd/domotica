@@ -7,11 +7,11 @@
 #include <zephyr/logging/log.h>
 #include <stdint.h>
 
-#define SHELL_COMMAND_COUNT 5
+#define SHELL_COMMAND_COUNT 4
 
 uint8_t SHELL_Init();
 void SHELL_HandleCommand();
-void SHELL_WritePrompt();
-void SHELL_ToUpper(char * string, size_t length);
+uint8_t SHELL_Match(char * a, char * b);
+
 
 #endif

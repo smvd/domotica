@@ -4,10 +4,9 @@ LOG_MODULE_REGISTER(SHELL, LOG_LEVEL_INF);
 
 const char * SHELL_COMMANDS[SHELL_COMMAND_COUNT] = {
     "NONE",
-    "HELP",
-    "LED",
-    "NONE",
-    "NONE"
+    "ACTION",
+    "LINK",
+    "NODES"
 };
 
 uint8_t SHELL_Init() {
@@ -18,23 +17,34 @@ uint8_t SHELL_Init() {
     return 0;
 }
 
-void SHELL_WritePrompt() {
-    UART_Write("> ", 2);
-}
 
 void SHELL_HandleCommand() {
     if (UART_commandReady == 1) {
-        SHELL_ToUpper(UART_commandBuffer, UART_commandBufferIndex);
+        uint8_t commandID = 0;
+        for (uint8_t i = 0; i < SHELL_COMMAND_COUNT; i += 1) {
+            if (SHELL_Match(SHELL_COMMANDS[i], UART_commandBuffer)) {
+                commandID = i;
+                break;
+            }
+        }
 
-        SHELL_WritePrompt();
+        if (commandID == 0) {
+            UART_Write("NAN\n", 4);
+        } else if (commandID == 1) {
+            UART_Write("ACT\n", 4);
+        } else if (commandID == 2) {
+            UART_Write("LNK\n", 4);
+        } else if (commandID == 3) {
+            UART_Write("NDS\n", 4);
+        }
         UART_EnableInput();
     }
 }
 
-void SHELL_ToUpper(char * string, size_t length) {
-    for (size_t i = 0; i < length; i += 1) {
-        if (string[i] >= 'a' && string[i] <= 'z') {
-            string[i] -= 32;
-        }
+uint8_t SHELL_Match(char * a, char * b) {
+    while (*a != '\0') {
+        if (*a++ != *b++) {return 0;}
     }
+
+    return 1;
 }

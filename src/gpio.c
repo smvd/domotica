@@ -41,5 +41,6 @@ uint8_t GPIO_Init() {
 }
 
 void GPIO_ButtonCallback(const struct device * dev, struct gpio_callback * cb, uint32_t pins) {
+    COAP_SendRequest(const char * addr, const char * uri, otCoapCode code, uint8_t * buffer, size_t bufferLength, otCoapResponseHandler handler);
     gpio_pin_toggle_dt(&GPIO_LED);
 }

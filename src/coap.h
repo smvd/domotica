@@ -12,5 +12,6 @@ extern otInstance * COAP_openThread;
 
 uint8_t COAP_Init();
 void COAP_DefaultHandler(void * context, otMessage * message, const otMessageInfo * messageInfo);
+uint8_t COAP_SendRequest(const char * addr, const char * uri, otCoapCode code, uint8_t * buffer, size_t bufferLength, otCoapResponseHandler handler);
 
 #endif

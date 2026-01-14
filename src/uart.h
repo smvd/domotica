@@ -19,7 +19,6 @@ extern char UART_commandBuffer[UART_BUFFER_SIZE];
 extern size_t UART_commandBufferIndex;
 
 uint8_t UART_Init();
-void UART_SampleCallback(struct usbd_context * const ctx, const struct usbd_msg * msg);
 void UART_InteruptHandler(const struct device * dev, void * user_data);
 uint8_t UART_EnableUSB();
 void UART_EnableInput();
