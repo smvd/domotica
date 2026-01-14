@@ -3,6 +3,8 @@
 LOG_MODULE_REGISTER(COAP, LOG_LEVEL_INF);
 
 otInstance * COAP_openThread;
+uint8_t COAP_buffer[COAP_BUFFER_LIMIT];
+size_t COAP_bufferLength;
 
 uint8_t COAP_Init() {
     COAP_openThread = openthread_get_default_instance();
@@ -27,7 +29,7 @@ void COAP_DefaultHandler(void * context, otMessage * message, const otMessageInf
     LOG_WRN("Received CoAP message that does not match any handler");
 }
 
-uint8_t COAP_SendRequest(const char * addr, const char * uri, otCoapCode code, uint8_t * buffer, size_t bufferLength, otCoapResponseHandler handler) {
+uint8_t COAP_SendRequest(const char * addr, const char * uri, otCoapCode code, uint8_t * buffer, size_t bufferLength) {
 	otMessageInfo messageInfo;
     memset(&messageInfo, 0, sizeof(messageInfo));
 	otIp6AddressFromString(addr, &messageInfo.mPeerAddr);
@@ -64,7 +66,7 @@ uint8_t COAP_SendRequest(const char * addr, const char * uri, otCoapCode code, u
 		return 1;
 	}
 
-	err = otCoapSendRequest(COAP_openThread, message, &messageInfo, handler, NULL)
+	err = otCoapSendRequest(COAP_openThread, message, &messageInfo, NULL, NULL);
 	if (err != OT_ERROR_NONE) {
 		LOG_ERR("Failed to send request");
 		otMessageFree(message);
@@ -73,4 +75,24 @@ uint8_t COAP_SendRequest(const char * addr, const char * uri, otCoapCode code, u
 
 	otMessageFree(message);
     return 0;
+}
+
+uint8_t COAP_RequestHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo, COAP_Function_t putFunction, COAP_Function_t getFunction) {
+    otCoapCode messageCode = otCoapMessageGetCode(message);
+    otCoapType messageType = otCoapMessageGetType(message);
+
+    if (messageType != OT_COAP_TYPE_NON_CONFIRMABLE) {
+        return 1;
+    }
+
+    if (messageCode == OT_COAP_CODE_PUT && putFunction != NULL) {
+		COAP_bufferLength = otMessageGetLength(message) - otMessageGetOffset(message);
+		otMessageRead(message, otMessageGetOffset(message), COAP_buffer, COAP_bufferLength);
+		
+        return putFunction(ctx, message, messageInfo);
+    } else if (messageCode == OT_COAP_CODE_GET && getFunction != NULL) {
+        return getFunction(ctx, message, messageInfo);
+    }
+
+    return 1;
 }
