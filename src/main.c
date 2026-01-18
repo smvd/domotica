@@ -25,7 +25,14 @@ LOG_MODULE_REGISTER(CORE, LOG_LEVEL_INF);
 	};
 */
 
-void main() {
+// To init Router or node mode. Test is also included in GPIO for colour change!
+#ifdef CONFIG_MESH_ROUTER_NODE
+// Router-specific initialization
+#else
+// Regular node initialization
+#endif
+
+int main() {
 	LOG_INF("Starting main");
 
     SHELL_Init();

@@ -61,4 +61,4 @@ CMD     ["bash"]
 # The container should be run in priviliged mode or with the correct usb device passed through
 # The project folder folder should my linked to /project/zephyr/project
 # Example:
-#   docker run --privileged -v ~/edu/domotica:/project/zephyr/project -it smvd-zephyr
+#   docker run --privileged -v /c/Users/bbels/Desktop/school/domotica/domotica:/project/zephyr/project -it smvd-zephyr

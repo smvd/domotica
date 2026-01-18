@@ -7,6 +7,7 @@
 #include "shell.h"
 #include "coap.h"
 #include "gpio.h"
+#include "hwid.h"
 
 #endif
 
