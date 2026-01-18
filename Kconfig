@@ -1,0 +1,9 @@
+mainmenu "Mesh Network Configuration"
+
+config MESH_ROUTER_NODE
+    bool "Enable mesh router functionality"
+    default n
+    help
+      Enable this option to make this node act as a mesh router.
+
+source "Kconfig.zephyr"
