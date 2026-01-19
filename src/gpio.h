@@ -9,6 +9,8 @@
 #include <zephyr/net/openthread.h>
 #include <openthread/coap.h>
 
+#include "hwid.h"
+
 #include "coap.h"
 
 #define GPIO_STATUS_LED_COUNT 3

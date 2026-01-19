@@ -68,19 +68,27 @@ uint8_t GPIO_Init() {
 
     return 0;
 }
-// shitty test to see if config actually works, and it does!
+
+// shitty test to see if config and HWID actually works, and it does!
 void GPIO_SetStatus(enum _GPIO_STATE state) {
+    uint64_t temp = get_unique_id();
+    if (temp != 0) {
+        gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
+    }
+    else {
+        gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
+    }
     switch (state) {
         case STATE_UNKNOWN:
             #ifdef CONFIG_MESH_ROUTER_NODE
-                // Normal-node initialization
-                gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 1);
-                gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
+                // Router-node initialization blue
+                gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
+                //gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
                 gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
             #else
-                // Normal-node initialization
+                // Normal-node initialization red
                 gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
-                gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
+                //gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
                 gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
             #endif
             break;

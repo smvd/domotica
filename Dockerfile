@@ -54,6 +54,9 @@ ENV PATH="/opt/nrf-command-line-tools/bin:${PATH}"
 # Setup the project folder
 RUN     mkdir /project/zephyr/project
 
+# Windows USB PASSTHROUGH
+ENV LD_LIBRARY_PATH="/opt/SEGGER/JLink:${LD_LIBRARY_PATH}"
+
 # Ready the container for development
 WORKDIR /project/zephyr/project
 CMD     ["bash"]
