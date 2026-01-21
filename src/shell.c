@@ -2,6 +2,11 @@
 
 LOG_MODULE_REGISTER(SHELL, LOG_LEVEL_INF);
 
+/*
+    SCAN - Multicasts please report your hwid and who you are reporting to if you exist
+         - Return all HWID
+*/
+
 const char * SHELL_COMMANDS[SHELL_COMMAND_COUNT] = {
     "NONE",
     "ACTION",
@@ -17,7 +22,6 @@ uint8_t SHELL_Init() {
 
     return 0;
 }
-
 
 void SHELL_HandleCommand() {
     if (UART_commandReady == 1) {
@@ -38,7 +42,7 @@ void SHELL_HandleCommand() {
         } else if (commandID == 3) {
             UART_Write("NDS\n", 4);
         } else if (commandID == 4) {
-            UART_Write();
+            UART_Write("HWID\n", 5);
         }
         UART_EnableInput();
     }

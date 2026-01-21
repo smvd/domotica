@@ -14,11 +14,13 @@
 
 #define GPIO_STATUS_LED_COUNT 3
 
+extern uint64_t GPIO_targetHWID;
+
 enum _GPIO_STATE {
     STATE_UNKNOWN,
-    STATE_ROUTER,
     STATE_NODE,
-    STATE_ERROR
+    STATE_ERROR,
+    STATE_IDENTIFY
 };
 
 uint8_t GPIO_Init();

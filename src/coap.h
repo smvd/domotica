@@ -8,7 +8,7 @@
 #include <zephyr/net/openthread.h>
 #include <openthread/coap.h>
 
-#define COAP_BUFFER_LIMIT 256
+#define COAP_BUFFER_LIMIT 32
 
 extern otInstance * COAP_openThread;
 extern uint8_t COAP_buffer[COAP_BUFFER_LIMIT];

@@ -17,16 +17,16 @@ def SendCommand(command):
         print(f"Device Response: {response}")
     else:
         print("No response from device.")
+c
 
-SendCommand("NONE")
-# Fill out nodes list using command nodes
+def ScanNetwork():
+    SendCommand("SCAN")
+
 nodes = [
-    ["Router", "00:00:00:00:00:00", "XX:XX:XX:XX:XX:XX"],
-    ["Node", "01:00:00:00:00:00", "XX:XX:XX:XX:XX:XX"],
-    ["Edge", "02:00:00:00:00:00", "XX:XX:XX:XX:XX:XX"],
+    ["Edge", "0x8383564009964fec", "0x000000000000000"],
+    ["Node", "0x8383564009964fec", "0x000000000000000"],
+    ["Node", "0x8383564009964fec", "0x000000000000000"]
 ]
-
-
 
 root = tk.Tk()
 root.title("Domotica network controller")

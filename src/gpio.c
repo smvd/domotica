@@ -3,6 +3,7 @@
 LOG_MODULE_REGISTER(GPIO, LOG_LEVEL_INF);
 
 enum _GPIO_STATE GPIO_state = STATE_UNKNOWN;
+uint64_t GPIO_targetHWID = 0x00000000;
 
 const struct gpio_dt_spec GPIO_STATUS_LEDS[GPIO_STATUS_LED_COUNT] = {
     GPIO_DT_SPEC_GET(DT_ALIAS(led1), gpios),
@@ -71,7 +72,6 @@ uint8_t GPIO_Init() {
     return 0;
 }
 
-// shitty test to see if config and HWID actually works, and it does!
 void GPIO_SetStatus(enum _GPIO_STATE state) {
     GPIO_state = state;
     switch (GPIO_state) {
@@ -85,25 +85,21 @@ void GPIO_SetStatus(enum _GPIO_STATE state) {
             gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
             gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
             break;
-        case STATE_ROUTER:
-            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
-            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
-            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 1);
-            break;
         case STATE_ERROR:
             gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 1);
             gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
+            break;
+        case STATE_IDENTIFY:
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 1);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
             gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
             break;
     }
 }
 
 void GPIO_SetStatusDefault() {
-    if (HWID_MatchRouter()) {
-        GPIO_SetStatus(STATE_ROUTER);
-    } else {
-        GPIO_SetStatus(STATE_NODE);
-    }
+    GPIO_SetStatus(STATE_NODE);
 }
 
 void GPIO_ButtonCallback(const struct device * dev, struct gpio_callback * cb, uint32_t pins) {
