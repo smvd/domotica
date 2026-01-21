@@ -2,6 +2,7 @@
 #define INCLUDED_SHELL
 
 #include "uart.h"
+#include "hwid.h"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>

@@ -8,9 +8,6 @@
 #include "coap.h"
 #include "gpio.h"
 #include "hwid.h"
+#include "uart.h"
 
 #endif
-
-
-// List all nodes
-// Turn any send light on/off to each node

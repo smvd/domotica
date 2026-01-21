@@ -10,13 +10,15 @@
 #include <openthread/coap.h>
 
 #include "hwid.h"
-
 #include "coap.h"
 
 #define GPIO_STATUS_LED_COUNT 3
 
 enum _GPIO_STATE {
-    STATE_UNKNOWN
+    STATE_UNKNOWN,
+    STATE_ROUTER,
+    STATE_NODE,
+    STATE_ERROR
 };
 
 uint8_t GPIO_Init();
@@ -25,5 +27,6 @@ void GPIO_Handler(void * ctx, otMessage * message, const otMessageInfo * message
 uint8_t GPIO_PutHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo);
 uint8_t GPIO_GetHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo);
 void GPIO_SetStatus(enum _GPIO_STATE state);
+void GPIO_SetStatusDefault();
 
 #endif

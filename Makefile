@@ -5,10 +5,7 @@ BAUD_RATE=115200
 default: flash
 
 build:
-	west build -b $(BOARD) --build-dir build 
-
-build_router:
-	west build -b $(BOARD) --build-dir build_router -- -DCONFIG_MESH_ROUTER_NODE=y
+	west build -b $(BOARD) --build-dir build
 
 # DO NOT FLASH WHILE MONITORING THE SERIAL INTERFACE IT WILL CRASH THE USB CONTROLLER
 flash: build
@@ -29,7 +26,7 @@ log: flash
 	cat $(BLOCK_DEVICE)
 
 env:
-	docker run --privileged -v /c/Users/bbels/Desktop/school/domotica/domotica:/project/zephyr/project -v /dev:/dev -it smvd-zephyr
+	docker run --privileged -v /home/smvd/edu/domotica:/project/zephyr/project -it smvd-zephyr
 
 env-build:
 	docker build -t smvd-zephyr .

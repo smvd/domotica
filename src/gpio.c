@@ -2,6 +2,8 @@
 
 LOG_MODULE_REGISTER(GPIO, LOG_LEVEL_INF);
 
+enum _GPIO_STATE GPIO_state = STATE_UNKNOWN;
+
 const struct gpio_dt_spec GPIO_STATUS_LEDS[GPIO_STATUS_LED_COUNT] = {
     GPIO_DT_SPEC_GET(DT_ALIAS(led1), gpios),
     GPIO_DT_SPEC_GET(DT_ALIAS(led2), gpios),
@@ -64,34 +66,43 @@ uint8_t GPIO_Init() {
 
 	LOG_INF("GPIO ready");
 
-	GPIO_SetStatus(STATE_UNKNOWN);
+	GPIO_SetStatusDefault();
 
     return 0;
 }
 
 // shitty test to see if config and HWID actually works, and it does!
 void GPIO_SetStatus(enum _GPIO_STATE state) {
-    uint64_t temp = get_unique_id();
-    if (temp != 0) {
-        gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
-    }
-    else {
-        gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
-    }
-    switch (state) {
+    GPIO_state = state;
+    switch (GPIO_state) {
         case STATE_UNKNOWN:
-            #ifdef CONFIG_MESH_ROUTER_NODE
-                // Router-node initialization blue
-                gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
-                //gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
-                gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
-            #else
-                // Normal-node initialization red
-                gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
-                //gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
-                gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
-            #endif
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 1);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 1);
             break;
+        case STATE_NODE:
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
+            break;
+        case STATE_ROUTER:
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 1);
+            break;
+        case STATE_ERROR:
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 1);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
+            break;
+    }
+}
+
+void GPIO_SetStatusDefault() {
+    if (HWID_MatchRouter()) {
+        GPIO_SetStatus(STATE_ROUTER);
+    } else {
+        GPIO_SetStatus(STATE_NODE);
     }
 }
 
@@ -105,8 +116,10 @@ void GPIO_Handler(void * ctx, otMessage * message, const otMessageInfo * message
 
 uint8_t GPIO_PutHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo) {
     gpio_pin_toggle_dt(&GPIO_LED);
+    return 0;
 }
 
 uint8_t GPIO_GetHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo) {
     gpio_pin_toggle_dt(&GPIO_LED);
+    return 0;
 }

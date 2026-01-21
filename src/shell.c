@@ -6,7 +6,8 @@ const char * SHELL_COMMANDS[SHELL_COMMAND_COUNT] = {
     "NONE",
     "ACTION",
     "LINK",
-    "NODES"
+    "SCAN",
+    "HWID"
 };
 
 uint8_t SHELL_Init() {
@@ -36,6 +37,8 @@ void SHELL_HandleCommand() {
             UART_Write("LNK\n", 4);
         } else if (commandID == 3) {
             UART_Write("NDS\n", 4);
+        } else if (commandID == 4) {
+            UART_Write();
         }
         UART_EnableInput();
     }
