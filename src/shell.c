@@ -40,7 +40,16 @@ void SHELL_HandleCommand() {
         } else if (commandID == 2) {
             UART_Write("LNK\n", 4);
         } else if (commandID == 3) {
-            UART_Write("NDS\n", 4);
+            UART_Write("1\r\n", 3);
+            CMD_SendScan();
+            UART_Write("2\r\n", 3);
+
+            k_msleep(1000);
+            UART_Write("3\r\n", 3);
+
+            LOG_INF("Node: %lld %lld", CMD_nodes[0].sourceHwid, CMD_nodes[0].targetHwid);
+
+            UART_Write("NDS\r\n", 5);
         } else if (commandID == 4) {
             UART_Write("HWID\n", 5);
         }

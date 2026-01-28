@@ -23,6 +23,8 @@ enum _GPIO_STATE {
     STATE_IDENTIFY
 };
 
+extern enum _GPIO_STATE GPIO_state;
+
 uint8_t GPIO_Init();
 void GPIO_ButtonCallback(const struct device * dev, struct gpio_callback * cb, uint32_t pins);
 void GPIO_Handler(void * ctx, otMessage * message, const otMessageInfo * messageInfo);

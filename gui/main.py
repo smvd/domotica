@@ -12,12 +12,13 @@ def SendCommand(command):
     ser.write(f"{command}\n".encode('utf-8'))
     ser.flush()
 
+    time.sleep(1);
+
     response = ser.readline().decode('utf-8').strip()
     if response:
         print(f"Device Response: {response}")
     else:
         print("No response from device.")
-c
 
 def ScanNetwork():
     SendCommand("SCAN")
@@ -27,6 +28,8 @@ nodes = [
     ["Node", "0x8383564009964fec", "0x000000000000000"],
     ["Node", "0x8383564009964fec", "0x000000000000000"]
 ]
+
+SendCommand("SCAN")
 
 root = tk.Tk()
 root.title("Domotica network controller")
