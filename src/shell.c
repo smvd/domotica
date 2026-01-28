@@ -55,6 +55,7 @@ void SHELL_HandleCommand() {
             CMD_SendIdentify(hwid, *(UART_commandBuffer + 26) - '0');
         }
 
+        UART_Write("--END--\r\n", 9);
         UART_EnableInput();
     }
 }

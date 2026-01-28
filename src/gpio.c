@@ -91,9 +91,9 @@ void GPIO_SetStatus(enum _GPIO_STATE state) {
             gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
             break;
         case STATE_IDENTIFY:
-            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 1);
-            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 1);
-            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[0], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[1], 0);
+            gpio_pin_set_dt(&GPIO_STATUS_LEDS[2], 1);
             break;
     }
 }

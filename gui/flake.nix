@@ -7,7 +7,10 @@
 
     outputs = {self, nixpkgs}: let 
         system = "x86_64-linux";
-        pkgs = import nixpkgs {inherit system;};
+        pkgs = import nixpkgs {
+            inherit system;
+            config.allowBroken = true;
+        };
     in {
         devShells.${system}.default = pkgs.mkShell {
             name = "C";
@@ -16,6 +19,7 @@
                 python313
                 python313Packages.pyserial
                 python313Packages.tkinter
+                python313Packages.ttkbootstrap
             ];
         };
     };
