@@ -2,3 +2,4 @@ build/
 DEVLOG
 blinky.elf
 copy/
+gui/__pycache__
