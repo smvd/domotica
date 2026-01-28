@@ -12,7 +12,7 @@ uint8_t HWID_Init() {
 		return 1;
 	}
 
-	LOG_INF("HWID: %#016llx", HWID_id);
+	LOG_INF("HWID: %016llx", HWID_id);
 
 	return 0;
 }
@@ -24,8 +24,21 @@ void HWID_ToString(uint64_t id, char * buffer) {
         buffer[i] = hex_chars[id & 0xF];
         id >>= 4;
     }
+}
 
-    buffer[16] = '\0';
+uint64_t HWID_FromString(char * buffer) {
+    uint64_t value = 0;
+
+    for (int i = 0; i < 16; i++) {
+        char c = tolower(buffer[i]);
+        uint64_t nibble =
+            (c >= '0' && c <= '9') ? (c - '0') :
+            (c >= 'a' && c <= 'f') ? (c - 'a' + 0xA) : 0;
+
+        value = (value << 4) | nibble;
+    }
+
+    return value;
 }
 
 const char* HWID_ToMulticast(uint64_t hwid)

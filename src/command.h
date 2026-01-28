@@ -42,5 +42,7 @@ uint8_t CMD_PutHandler(void * ctx, otMessage * message, const otMessageInfo * me
 uint8_t CMD_GetHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo);
 uint8_t CMD_SubscribeMulticast(const char* multicastAddr);
 void CMD_SendScan();
+void CMD_SendUpdate(uint64_t deviceToUpdate, uint64_t newTarget);
+void CMD_SendIdentify(uint64_t hwid, uint8_t state);
 
 #endif

@@ -9,7 +9,7 @@
 #include <zephyr/logging/log.h>
 #include <stdint.h>
 
-#define SHELL_COMMAND_COUNT 5
+#define SHELL_COMMAND_COUNT 4
 
 uint8_t SHELL_Init();
 void SHELL_HandleCommand();

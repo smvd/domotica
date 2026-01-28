@@ -14,7 +14,8 @@ FC:2F:2F:41:D9:65
 E3:AF:F6:DD:06:3F
     0x51b317d464fcdb96
 E1:A6:E9:B8:C7:EA
-    0xde02c618e7a52ab5
+    0x0de02c618e7a52ab
+       de02c618e7a52ab
 */
 
 void main() {

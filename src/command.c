@@ -41,21 +41,41 @@ void CMD_Handler(void * ctx, otMessage * message, const otMessageInfo * messageI
 }
 
 void CMD_SendScan() {
+    CMD_nodeIndex = 1;
+    CMD_nodes[0].sourceHwid = HWID_id;
+    CMD_nodes[0].targetHwid = GPIO_targetHWID;
     uint8_t commandBuffer[COAP_BUFFER_LIMIT];
-    CMD_Serialize(commandBuffer, COMMAND_SCAN, HWID_id, 0x00000000);
+    CMD_Serialize(commandBuffer, COMMAND_SCAN, HWID_id, 0x0000000000000000);
     COAP_SendRequest("ff03::1", "command", OT_COAP_CODE_PUT, commandBuffer, 17);
 }
 
+void CMD_SendUpdate(uint64_t deviceToUpdate, uint64_t newTarget) {
+    if (deviceToUpdate == HWID_id) {
+        GPIO_targetHWID = newTarget;
+        return;
+    }
+
+    uint8_t commandBuffer[COAP_BUFFER_LIMIT];
+    CMD_Serialize(commandBuffer, COMMAND_UPDATE, newTarget, 0x0000000000000000);
+    COAP_SendRequest(HWID_ToMulticast(deviceToUpdate), "command", OT_COAP_CODE_PUT, commandBuffer, 17);
+}
+
+void CMD_SendIdentify(uint64_t hwid, uint8_t state) {
+    if (hwid == HWID_id) {
+        if (state == 1) {
+            GPIO_SetStatus(STATE_IDENTIFY);
+        } else {
+            GPIO_SetStatusDefault();
+        }
+        return;
+    }
+
+    uint8_t commandBuffer[COAP_BUFFER_LIMIT];
+    CMD_Serialize(commandBuffer, COMMAND_IDENTIFY, (state == 1) ? (0xFFFFFFFFFFFFFFFF) : (0x0000000000000000), 0x0000000000000000);
+    COAP_SendRequest(HWID_ToMulticast(hwid), "command", OT_COAP_CODE_PUT, commandBuffer, 17);
+}
+
 void CMD_Serialize(uint8_t * commandBuffer, uint8_t command, uint64_t hwidA, uint64_t hwidB) {
-    char * buffer[18];
-    HWID_ToString(hwidA, buffer);
-    buffer[16] = '\r';
-    buffer[17] = '\n';
-    UART_Write(buffer, 18);
-    HWID_ToString(hwidB, buffer);
-    buffer[16] = '\r';
-    buffer[17] = '\n';
-    UART_Write(buffer, 18);
     commandBuffer[0] = command;
     memcpy(commandBuffer + 1, &hwidA, 8);
     memcpy(commandBuffer + 9, &hwidB, 8);
@@ -91,20 +111,13 @@ uint8_t CMD_SubscribeMulticast(const char* multicastAddr) {
 uint8_t CMD_PutHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo) {
     struct CMD_Command command = CMD_Deserialize();
 
-    char a = command.command + '0';
-
-    UART_Write(&a, 1);
-    UART_Write(" cmd\r\n", 6);
-
     switch (command.command) {
         case COMMAND_SCAN:
-            UART_Write("SCAN\r\n", 6);
             uint8_t commandBuffer[COAP_BUFFER_LIMIT];
             CMD_Serialize(commandBuffer, COMMAND_SCAN_RETURN, HWID_id, GPIO_targetHWID);
             COAP_SendRequest(HWID_ToMulticast(command.hwidA), "command", OT_COAP_CODE_PUT, commandBuffer, 17);
             break;
         case COMMAND_SCAN_RETURN:
-            UART_Write("RETURN\r\n", 8);
             CMD_nodes[CMD_nodeIndex].sourceHwid = command.hwidA;
             CMD_nodes[CMD_nodeIndex].targetHwid = command.hwidB;
             CMD_nodeIndex += 1;
@@ -113,8 +126,8 @@ uint8_t CMD_PutHandler(void * ctx, otMessage * message, const otMessageInfo * me
             GPIO_targetHWID = command.hwidA;
             break;
         case COMMAND_IDENTIFY:
-            if (command.hwidA == 0xFFFFFFFF) {
-                GPIO_state = STATE_IDENTIFY;
+            if (command.hwidA == 0xFFFFFFFFFFFFFFFF) {
+                GPIO_SetStatus(STATE_IDENTIFY);
             } else {
                 GPIO_SetStatusDefault();
             }

@@ -15,7 +15,6 @@
 #define GPIO_STATUS_LED_COUNT 3
 
 extern uint64_t GPIO_targetHWID;
-extern enum _GPIO_STATE GPIO_state;
 
 enum _GPIO_STATE {
     STATE_UNKNOWN,

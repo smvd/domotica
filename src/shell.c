@@ -9,10 +9,9 @@ LOG_MODULE_REGISTER(SHELL, LOG_LEVEL_INF);
 
 const char * SHELL_COMMANDS[SHELL_COMMAND_COUNT] = {
     "NONE",
-    "ACTION",
-    "LINK",
+    "UPDATE",
     "SCAN",
-    "HWID"
+    "IDENTIFY"
 };
 
 uint8_t SHELL_Init() {
@@ -36,24 +35,26 @@ void SHELL_HandleCommand() {
         if (commandID == 0) {
             UART_Write("INVALID COMMAND\r\n", 17);
         } else if (commandID == 1) {
-            UART_Write("ACT\r\n", 5);
+            uint64_t deviceToUpdate = HWID_FromString(UART_commandBuffer + 7);
+            uint64_t newTarget = HWID_FromString(UART_commandBuffer + 24);
+            CMD_SendUpdate(deviceToUpdate, newTarget);
         } else if (commandID == 2) {
-            UART_Write("LNK\r\n", 5);
-        } else if (commandID == 3) {
-            UART_Write("Scanning for nodes\r\n", 20);
             CMD_SendScan();
             k_msleep(1000);
-            char * buffer[18];
+            char * buffer[16];
             for (uint8_t i = 0; i < CMD_nodeIndex; i += 1) {
-                HWID_ToString(HWID_id, buffer);
-                buffer[16] = '\r';
-                buffer[17] = '\n';
-                UART_Write(buffer, 18);
+                HWID_ToString(CMD_nodes[i].sourceHwid, buffer);
+                UART_Write(buffer, 16);
+                UART_Write(" ", 1);
+                HWID_ToString(CMD_nodes[i].targetHwid, buffer);
+                UART_Write(buffer, 16);
+                UART_Write("\r\n", 2);
             }
-            UART_Write("NDS\r\n", 5);
-        } else if (commandID == 4) {
-            UART_Write("HWID\r\n", 6);
+        } else if (commandID == 3) {
+            uint64_t hwid = HWID_FromString(UART_commandBuffer + 9);
+            CMD_SendIdentify(hwid, *(UART_commandBuffer + 26) - '0');
         }
+
         UART_EnableInput();
     }
 }
