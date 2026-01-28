@@ -2,9 +2,6 @@
 
 LOG_MODULE_REGISTER(CMD, LOG_LEVEL_INF);
 
-struct CMD_Nodes CMD_nodes[CMD_NODE_COUNT];
-uint8_t CMD_nodeIndex = 0;
-
 otCoapResource CMD_rsc = {
     .mUriPath = "command",
     .mHandler = CMD_Handler,
@@ -55,14 +52,6 @@ struct CMD_Command CMD_Deserialize() {
     return command;
 }
 
-void CMD_SendScan() {
-    uint8_t commandBuffer[COAP_BUFFER_LIMIT];
-    UART_Write("1A\r\n", 3);
-    CMD_Serialize(commandBuffer, COMMAND_SCAN_UPDATE, HWID_id, 0);
-    UART_Write("1B\r\n", 3);
-    COAP_SendRequest("ff03::1", "command", OT_COAP_CODE_PUT, commandBuffer, 17);
-    UART_Write("1C\r\n", 3);
-}
 
 uint8_t CMD_SubscribeMulticast(const char* multicastAddr) {
     otError error;
@@ -82,18 +71,17 @@ uint8_t CMD_SubscribeMulticast(const char* multicastAddr) {
     return 0;
 }
 
+
 uint8_t CMD_PutHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo) {
     struct CMD_Command command = CMD_Deserialize();
 
     switch (command.command) {
         case COMMAND_SCAN:
             uint8_t commandBuffer[COAP_BUFFER_LIMIT];
-            CMD_Serialize(commandBuffer, COMMAND_SCAN_UPDATE, HWID_id, GPIO_targetHWID);
-            COAP_SendRequest(HWID_ToMulticast(command.hwidA), "command", OT_COAP_CODE_PUT, commandBuffer, 17);
+            CMD_Serialize(commandBuffer, COMMAND_UPDATE, HWID_id, GPIO_targetHWID);
+            COAP_SendRequest(HWID_ToMulticast(command.hwidA), "command", OT_COAP_CODE_PUT, NULL, 0);
             break;
-        case COMMAND_SCAN_UPDATE:
-            CMD_nodes[CMD_nodeIndex].sourceHwid = command.hwidA;
-            CMD_nodes[CMD_nodeIndex].targetHwid = command.hwidB;
+        case COMMAND_SCAN_RETURN:
             break;
         case COMMAND_UPDATE:
             GPIO_targetHWID = command.hwidA;

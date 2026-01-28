@@ -5,6 +5,7 @@
 	#include <zephyr/sys/printk.h>
 	#include <zephyr/logging/log.h>
 	#include <zephyr/kernel.h>
+	#include <stdio.h>
 
 	#include "uart.h"
 
@@ -13,5 +14,5 @@
 	uint8_t HWID_Init();
 	uint8_t HWID_MatchRouter();
 	void HWID_ToString(char * buffer);
-
+	const char* HWID_ToMulticast(uint64_t hwid);
 #endif

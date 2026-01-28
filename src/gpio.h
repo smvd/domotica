@@ -22,7 +22,6 @@ enum _GPIO_STATE {
     STATE_ERROR,
     STATE_IDENTIFY
 };
-
 extern enum _GPIO_STATE GPIO_state;
 
 uint8_t GPIO_Init();

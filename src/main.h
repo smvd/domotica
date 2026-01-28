@@ -9,5 +9,6 @@
 #include "gpio.h"
 #include "hwid.h"
 #include "uart.h"
+#include "command.h"
 
 #endif

@@ -3,7 +3,7 @@
 LOG_MODULE_REGISTER(GPIO, LOG_LEVEL_INF);
 
 enum _GPIO_STATE GPIO_state = STATE_UNKNOWN;
-uint64_t GPIO_targetHWID = 0x00000000;
+uint64_t GPIO_targetHWID = 0xde02c618e7a52ab5;
 
 const struct gpio_dt_spec GPIO_STATUS_LEDS[GPIO_STATUS_LED_COUNT] = {
     GPIO_DT_SPEC_GET(DT_ALIAS(led1), gpios),
@@ -103,7 +103,7 @@ void GPIO_SetStatusDefault() {
 }
 
 void GPIO_ButtonCallback(const struct device * dev, struct gpio_callback * cb, uint32_t pins) {
-    COAP_SendRequest("ff03::1", "led", OT_COAP_CODE_PUT, NULL, 0);
+    COAP_SendRequest(HWID_ToMulticast(GPIO_targetHWID), "led", OT_COAP_CODE_PUT, NULL, 0);
 }
 
 void GPIO_Handler(void * ctx, otMessage * message, const otMessageInfo * messageInfo) {

@@ -18,7 +18,7 @@ uint8_t HWID_Init() {
 }
 
 uint8_t HWID_MatchRouter() {
-    return HWID_id == 0x8383564009964fec;
+    return HWID_id == 0xde02c618e7a52ab5;
 }
 
 void HWID_ToString(char * buffer) {
@@ -30,4 +30,18 @@ void HWID_ToString(char * buffer) {
     }
 
     buffer[16] = '\0';
+}
+
+const char* HWID_ToMulticast(uint64_t hwid)
+{
+    static char buf[40];
+
+    snprintf(buf, sizeof(buf),
+        "ff03::1:%04x:%04x:%04x:%04x",
+        (uint16_t)(hwid >> 48),
+        (uint16_t)(hwid >> 32),
+        (uint16_t)(hwid >> 16),
+        (uint16_t)(hwid));
+
+    return buf;
 }

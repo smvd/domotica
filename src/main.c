@@ -17,13 +17,15 @@ E1:A6:E9:B8:C7:EA
     0xde02c618e7a52ab5
 */
 
-int main() {
+void main() {
 	LOG_INF("Starting main");
 
     SHELL_Init();
     HWID_Init();
     COAP_Init();
     GPIO_Init();
+    CMD_Init();
+
 
     while (1) {
         SHELL_HandleCommand();
