@@ -15,6 +15,7 @@
 #define GPIO_STATUS_LED_COUNT 3
 
 extern uint64_t GPIO_targetHWID;
+extern enum _GPIO_STATE GPIO_state;
 
 enum _GPIO_STATE {
     STATE_UNKNOWN,
@@ -22,7 +23,6 @@ enum _GPIO_STATE {
     STATE_ERROR,
     STATE_IDENTIFY
 };
-extern enum _GPIO_STATE GPIO_state;
 
 uint8_t GPIO_Init();
 void GPIO_ButtonCallback(const struct device * dev, struct gpio_callback * cb, uint32_t pins);

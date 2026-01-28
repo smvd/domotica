@@ -17,16 +17,12 @@ uint8_t HWID_Init() {
 	return 0;
 }
 
-uint8_t HWID_MatchRouter() {
-    return HWID_id == 0xde02c618e7a52ab5;
-}
-
-void HWID_ToString(char * buffer) {
+void HWID_ToString(uint64_t id, char * buffer) {
     const char hex_chars[] = "0123456789abcdef";
 
     for (int i = 15; i >= 0; i--) {
-        buffer[i] = hex_chars[HWID_id & 0xF];
-        HWID_id >>= 4;
+        buffer[i] = hex_chars[id & 0xF];
+        id >>= 4;
     }
 
     buffer[16] = '\0';

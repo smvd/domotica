@@ -64,11 +64,13 @@ void UART_InteruptHandler(const struct device * dev, void * user_data) {
             char c;
             uart_fifo_read(UART_DEVICE, &c, 1);
 
-            if (c == '\n') {
+            if (c == '\r') {
                 UART_commandBuffer[UART_commandBufferIndex] = '\0';
+                UART_Write("\r\n", 2);
                 UART_DisableInput();
             } else {
                 UART_commandBuffer[UART_commandBufferIndex++] = c;
+                UART_Write(&c, 1);
             }
 		}
 

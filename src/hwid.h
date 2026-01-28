@@ -13,6 +13,6 @@
 
 	uint8_t HWID_Init();
 	uint8_t HWID_MatchRouter();
-	void HWID_ToString(char * buffer);
+	void HWID_ToString(uint64_t id, char * buffer);
 	const char* HWID_ToMulticast(uint64_t hwid);
 #endif

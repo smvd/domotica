@@ -34,15 +34,25 @@ void SHELL_HandleCommand() {
         }
 
         if (commandID == 0) {
-            UART_Write("NAN\n", 4);
+            UART_Write("INVALID COMMAND\r\n", 17);
         } else if (commandID == 1) {
-            UART_Write("ACT\n", 4);
+            UART_Write("ACT\r\n", 5);
         } else if (commandID == 2) {
-            UART_Write("LNK\n", 4);
+            UART_Write("LNK\r\n", 5);
         } else if (commandID == 3) {
-            UART_Write("NDS\n", 4);
+            UART_Write("Scanning for nodes\r\n", 20);
+            CMD_SendScan();
+            k_msleep(1000);
+            char * buffer[18];
+            for (uint8_t i = 0; i < CMD_nodeIndex; i += 1) {
+                HWID_ToString(HWID_id, buffer);
+                buffer[16] = '\r';
+                buffer[17] = '\n';
+                UART_Write(buffer, 18);
+            }
+            UART_Write("NDS\r\n", 5);
         } else if (commandID == 4) {
-            UART_Write("HWID\n", 5);
+            UART_Write("HWID\r\n", 6);
         }
         UART_EnableInput();
     }
