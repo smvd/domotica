@@ -138,8 +138,9 @@ class Interface:
             messagebox.showerror("Update Error", f"Please select two valid HWIDs")
         else:
             self.serial.UpdateNode(self.newSourceHWID.get(), self.newTargetHWID.get())
-            self.newSourceHWID = tk.StringVar(value="0000000000000000")
-            self.newTargetHWID = tk.StringVar(value="0000000000000000")
+            self.newSourceHWID.set("0000000000000000")
+            self.newTargetHWID.set("0000000000000000")
+            self.HandleScan();
 
     def HandleIdentify(self, hwid, state):
         value = 1 if state.get() else 0

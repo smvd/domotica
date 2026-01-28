@@ -19,7 +19,7 @@ class SerialManager:
         self.conn.write(f"{command}\r".encode("ascii"))
         self.conn.flush()
         
-        time.sleep(1)
+        time.sleep(0.1)
         
         response = []
         self.conn.readline() 

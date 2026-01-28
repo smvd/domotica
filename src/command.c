@@ -20,7 +20,7 @@ otCoapResource CMD_rsc = {
 // CMD   HWID_A                                   HWID_B
 // 0x00  0x11 0x11 0x11 0x11 0x11 0x11 0x11 0x11  0x22 0x22 0x22 0x22 0x22 0x22 0x22 0x22
 
-void CMD_Init() {
+uint8_t CMD_Init() {
     otCoapAddResource(COAP_openThread, &CMD_rsc);
 
     if (CMD_SubscribeMulticast(HWID_ToMulticast(HWID_id))) {
@@ -34,6 +34,7 @@ void CMD_Init() {
     }
 
     LOG_INF("Commands registed and ready");
+    return 0;
 }
 
 void CMD_Handler(void * ctx, otMessage * message, const otMessageInfo * messageInfo) {

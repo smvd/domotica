@@ -2,12 +2,7 @@
 
 LOG_MODULE_REGISTER(SHELL, LOG_LEVEL_INF);
 
-/*
-    SCAN - Multicasts please report your hwid and who you are reporting to if you exist
-         - Return all HWID
-*/
-
-const char * SHELL_COMMANDS[SHELL_COMMAND_COUNT] = {
+char * SHELL_COMMANDS[SHELL_COMMAND_COUNT] = {
     "NONE",
     "UPDATE",
     "SCAN",
@@ -41,7 +36,7 @@ void SHELL_HandleCommand() {
         } else if (commandID == 2) {
             CMD_SendScan();
             k_msleep(1000);
-            char * buffer[16];
+            char buffer[16];
             for (uint8_t i = 0; i < CMD_nodeIndex; i += 1) {
                 HWID_ToString(CMD_nodes[i].sourceHwid, buffer);
                 UART_Write(buffer, 16);

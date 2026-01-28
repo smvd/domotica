@@ -34,13 +34,13 @@ struct CMD_Command {
 extern struct CMD_Nodes CMD_nodes[CMD_NODE_COUNT];
 extern uint8_t CMD_nodeIndex;
 
-void CMD_Init();
+uint8_t CMD_Init();
 void CMD_Handler(void * ctx, otMessage * message, const otMessageInfo * messageInfo);
 void CMD_Serialize(uint8_t * commandBuffer, uint8_t command, uint64_t hwidA, uint64_t hwidB);
 struct CMD_Command CMD_Deserialize();
 uint8_t CMD_PutHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo);
 uint8_t CMD_GetHandler(void * ctx, otMessage * message, const otMessageInfo * messageInfo);
-uint8_t CMD_SubscribeMulticast(const char* multicastAddr);
+uint8_t CMD_SubscribeMulticast(const char * multicastAddr);
 void CMD_SendScan();
 void CMD_SendUpdate(uint64_t deviceToUpdate, uint64_t newTarget);
 void CMD_SendIdentify(uint64_t hwid, uint8_t state);

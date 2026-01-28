@@ -30,7 +30,7 @@ uint64_t HWID_FromString(char * buffer) {
     uint64_t value = 0;
 
     for (int i = 0; i < 16; i++) {
-        char c = tolower(buffer[i]);
+        char c = buffer[i];
         uint64_t nibble =
             (c >= '0' && c <= '9') ? (c - '0') :
             (c >= 'a' && c <= 'f') ? (c - 'a' + 0xA) : 0;
@@ -41,7 +41,7 @@ uint64_t HWID_FromString(char * buffer) {
     return value;
 }
 
-const char* HWID_ToMulticast(uint64_t hwid)
+const char * HWID_ToMulticast(uint64_t hwid)
 {
     static char buf[40];
 
